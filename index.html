@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cireng Kelor Morinutrient - Camilan Sehat & Lezat</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kelor: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        pedas: {
+                            50: '#fef2f2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                        },
+                        coklat: {
+                            50: '#faf5ff',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            dark: '#4a2c11',
+                        },
+                        kuning: {
+                            400: '#facc15',
+                            500: '#eab308',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fcfdfd;
+            color: #1f2937;
+        }
+
+        /* Smooth Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #16a34a;
+            border-radius: 9999px;
+        }
+
+        /* Bounce Animation for Cart Badge */
+        @keyframes cartPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        .pop-badge {
+            animation: cartPop 0.3s ease-in-out;
+        }
+
+        /* Glassmorphism background blur */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <header class="sticky top-0 z-40 glass-panel border-b border-kelor-100 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                
+                <!-- Logo Brand -->
+                <a href="#beranda" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-kelor-600 to-kelor-800 flex items-center justify-center text-white shadow-lg shadow-kelor-600/30 group-hover:scale-105 transition-transform duration-300">
+                        <i class="fa-solid fa-leaf text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="block text-xl font-extrabold font-heading text-stone-900 tracking-tight leading-none">
+                            Cireng Kelor
+                        </span>
+                        <span class="text-xs font-bold tracking-wider uppercase text-kelor-600">
+                            Morinutrient
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-8 font-semibold text-stone-600 text-sm">
+                    <a href="#beranda" class="hover:text-kelor-600 transition-colors py-2">Beranda</a>
+                    <a href="#produk" class="hover:text-kelor-600 transition-colors py-2">Produk</a>
+                    <a href="#tentang" class="hover:text-kelor-600 transition-colors py-2">Tentang Kami</a>
+                    <a href="#cara-pesan" class="hover:text-kelor-600 transition-colors py-2">Cara Pesan</a>
+                </nav>
+
+                <!-- Actions: Cart Button & Mobile Toggle -->
+                <div class="flex items-center gap-3">
+                    <button id="cart-btn" onclick="openCartDrawer()" class="relative p-3 rounded-2xl bg-stone-100 text-stone-700 hover:bg-kelor-50 hover:text-kelor-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-kelor-500">
+                        <i class="fa-solid fa-cart-shopping text-xl"></i>
+                        <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-pedas-600 text-white font-extrabold text-xs w-6 h-6 rounded-full flex items-center justify-center shadow-md scale-0 transition-transform duration-300">0</span>
+                    </button>
+
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-3 rounded-2xl bg-stone-100 text-stone-700 hover:bg-stone-200 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-stone-200 px-6 py-4 space-y-3 shadow-xl">
+            <a href="#beranda" onclick="toggleMobileMenu()" class="block text-stone-700 font-semibold hover:text-kelor-600 py-1">Beranda</a>
+            <a href="#produk" onclick="toggleMobileMenu()" class="block text-stone-700 font-semibold hover:text-kelor-600 py-1">Produk</a>
+            <a href="#tentang" onclick="toggleMobileMenu()" class="block text-stone-700 font-semibold hover:text-kelor-600 py-1">Tentang Kami</a>
+            <a href="#cara-pesan" onclick="toggleMobileMenu()" class="block text-stone-700 font-semibold hover:text-kelor-600 py-1">Cara Pesan</a>
+        </div>
+    </header>
+
+    <section id="beranda" class="relative overflow-hidden pt-8 pb-16 md:py-24 bg-gradient-to-b from-kelor-50/70 via-stone-50 to-stone-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Hero Left Column -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-kelor-100 border border-kelor-200 text-kelor-800 text-xs font-bold shadow-xs">
+                        <i class="fa-solid fa-sparkles text-kuning-500"></i> Inovasi Jajanan Sehat UMKM Mahasiswa
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-heading text-stone-900 tracking-tight leading-tight">
+                        Sensasi Gurih Renyah <span class="text-transparent bg-clip-text bg-gradient-to-r from-kelor-600 to-kelor-800">Cireng Daun Kelor</span>
+                    </h1>
+
+                    <p class="text-stone-600 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        Cemilan gurih berbahan dasar tapioka yang diperkaya dengan kebaikan nutrisi daun kelor (<span class="italic font-medium">Moringa Oleifera</span>). Hadir dengan isian Ayam Suwir Pedas dan Coklat Creamy!
+                    </p>
+
+                    <!-- Hero Call-To-Action -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#produk" class="w-full sm:w-auto px-8 py-4 bg-pedas-600 hover:bg-pedas-700 text-white font-bold text-base rounded-2xl shadow-lg shadow-pedas-600/30 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-center flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-utensils"></i>
+                            <span>Pesan Sekarang</span>
+                        </a>
+                        <a href="#tentang" class="w-full sm:w-auto px-8 py-4 bg-white hover:bg-stone-100 text-stone-700 border border-stone-200 font-bold text-base rounded-2xl shadow-xs transition-all duration-300 text-center flex items-center justify-center gap-2">
+                            <span>Tentang Kelor</span>
+                            <i class="fa-solid fa-arrow-right text-sm"></i>
+                        </a>
+                    </div>
+
+                    <!-- Key Metrics -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-stone-200 max-w-lg mx-auto lg:mx-0">
+                        <div>
+                            <p class="text-xl sm:text-2xl font-black text-stone-900 font-heading">100%</p>
+                            <p class="text-xs text-stone-500 font-semibold">Bahan Alami</p>
+                        </div>
+                        <div>
+                            <p class="text-xl sm:text-2xl font-black text-stone-900 font-heading">Rp5.000</p>
+                            <p class="text-xs text-stone-500 font-semibold">Harga Terjangkau</p>
+                        </div>
+                        <div>
+                            <p class="text-xl sm:text-2xl font-black text-stone-900 font-heading">Fresh</p>
+                            <p class="text-xs text-stone-500 font-semibold">Dibuat Setiap Hari</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Right Column Graphic -->
+                <div class="lg:col-span-5 relative">
+                    <div class="relative mx-auto max-w-md">
+                        <div class="absolute -inset-4 bg-gradient-to-r from-kelor-400 to-kuning-400 rounded-3xl blur-2xl opacity-40"></div>
+                        
+                        <div class="relative bg-white p-6 rounded-3xl shadow-xl border border-stone-100 overflow-hidden">
+                            <div class="relative h-72 sm:h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-kelor-800 to-kelor-900 flex items-center justify-center text-white p-6">
+                                <div class="absolute inset-0 opacity-10 flex flex-wrap gap-6 p-4">
+                                    <i class="fa-solid fa-leaf text-6xl"></i>
+                                    <i class="fa-solid fa-bowl-food text-6xl"></i>
+                                    <i class="fa-solid fa-seedling text-6xl"></i>
+                                </div>
+
+                                <div class="relative z-10 text-center space-y-3">
+                                    <div class="w-24 h-24 mx-auto rounded-full bg-kelor-500/30 border-4 border-emerald-300/40 flex items-center justify-center text-kelor-200 shadow-inner">
+                                        <i class="fa-solid fa-plate-wheat text-5xl"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold font-heading text-white">Cireng Kelor Fresh</h3>
+                                    <span class="inline-block px-3 py-1 bg-kuning-500/20 border border-kuning-400/40 text-kuning-400 font-bold text-xs rounded-full">
+                                        4 Buah / Porsi
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                                <span class="px-3 py-1 rounded-xl bg-kelor-50 text-kelor-700 text-xs font-bold flex items-center gap-1.5">
+                                    <i class="fa-solid fa-shield-heart"></i> Bernutrisi
+                                </span>
+                                <span class="px-3 py-1 rounded-xl bg-amber-50 text-amber-700 text-xs font-bold flex items-center gap-1.5">
+                                    <i class="fa-solid fa-certificate"></i> Halal & Higienis
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="produk" class="py-16 md:py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-extrabold uppercase tracking-widest text-kelor-600 mb-2">Varian Produk Kami</h2>
+                <p class="text-3xl sm:text-4xl font-extrabold font-heading text-stone-900">
+                    Pilih Cireng Kelor Favoritmu
+                </p>
+                <p class="text-stone-500 mt-2 text-sm sm:text-base">
+                    Dua pilihan rasa lezat dengan paduan nutrisi daun kelor alami.
+                </p>
+            </div>
+
+            <!-- Product Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                
+                <!-- PRODUCT 1: Ayam Suwir -->
+                <div class="group bg-stone-50 rounded-3xl border border-stone-200 overflow-hidden hover:shadow-2xl hover:border-pedas-500/40 transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <!-- Card Banner -->
+                        <div class="relative h-56 bg-gradient-to-br from-stone-900 to-pedas-700 p-6 flex flex-col justify-between">
+                            <div class="flex justify-between items-start">
+                                <span class="px-3 py-1 rounded-full bg-pedas-600 text-white font-extrabold text-xs shadow-md uppercase tracking-wider">
+                                    <i class="fa-solid fa-pepper-hot mr-1"></i> Gurih & Pedas
+                                </span>
+                                <span class="px-3 py-1 rounded-full bg-white/90 text-stone-800 font-extrabold text-xs shadow-xs">
+                                    Isi 4 Buah
+                                </span>
+                            </div>
+
+                            <div class="text-center my-auto">
+                                <div class="w-16 h-16 mx-auto rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-pedas-500 text-3xl mb-2 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fa-solid fa-drumstick-bite"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold font-heading text-white">Cireng Kelor Ayam Suwir</h3>
+                            </div>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="p-6 space-y-4">
+                            <p class="text-stone-600 text-sm leading-relaxed">
+                                Cireng adonan kelor renyah dengan isian danging ayam suwir bumbu merah pedas gurih melimpah.
+                            </p>
+                            
+                            <div class="flex items-center gap-2 text-xs font-bold text-pedas-700 bg-pedas-50 p-3 rounded-xl border border-pedas-100">
+                                <i class="fa-solid fa-fire text-pedas-500"></i>
+                                <span>Isi: Ayam Suwir | Rasa: Gurih & Pedas Nagih</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-stone-200/80 mt-auto">
+                        <div>
+                            <span class="text-xs text-stone-400 block font-semibold">Harga / Porsi</span>
+                            <span class="text-2xl font-black text-stone-900 font-heading">Rp 5.000</span>
+                        </div>
+                        <button onclick="addToCart(1, 'Cireng Kelor Isi Ayam Suwir', 5000, 'Ayam Suwir')" class="px-5 py-3 rounded-2xl bg-pedas-600 hover:bg-pedas-700 text-white font-bold text-sm shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>+ Tambah ke Keranjang</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PRODUCT 2: Coklat -->
+                <div class="group bg-stone-50 rounded-3xl border border-stone-200 overflow-hidden hover:shadow-2xl hover:border-coklat-600/40 transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <!-- Card Banner -->
+                        <div class="relative h-56 bg-gradient-to-br from-coklat-dark to-coklat-700 p-6 flex flex-col justify-between">
+                            <div class="flex justify-between items-start">
+                                <span class="px-3 py-1 rounded-full bg-coklat-600 text-white font-extrabold text-xs shadow-md uppercase tracking-wider">
+                                    <i class="fa-solid fa-cookie-bite mr-1"></i> Manis & Creamy
+                                </span>
+                                <span class="px-3 py-1 rounded-full bg-white/90 text-stone-800 font-extrabold text-xs shadow-xs">
+                                    Isi 4 Buah
+                                </span>
+                            </div>
+
+                            <div class="text-center my-auto">
+                                <div class="w-16 h-16 mx-auto rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-amber-300 text-3xl mb-2 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fa-solid fa-cubes-stacked"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold font-heading text-white">Cireng Kelor Isi Coklat</h3>
+                            </div>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="p-6 space-y-4">
+                            <p class="text-stone-600 text-sm leading-relaxed">
+                                Cireng adonan kelor renyah dengan isian coklat lumer manis dan creamy yang meleleh di setiap gigitan.
+                            </p>
+                            
+                            <div class="flex items-center gap-2 text-xs font-bold text-coklat-700 bg-coklat-50 p-3 rounded-xl border border-coklat-100">
+                                <i class="fa-solid fa-heart text-coklat-500"></i>
+                                <span>Isi: Coklat Lumer | Rasa: Manis & Creamy</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-stone-200/80 mt-auto">
+                        <div>
+                            <span class="text-xs text-stone-400 block font-semibold">Harga / Porsi</span>
+                            <span class="text-2xl font-black text-stone-900 font-heading">Rp 5.000</span>
+                        </div>
+                        <button onclick="addToCart(2, 'Cireng Kelor Isi Coklat', 5000, 'Coklat')" class="px-5 py-3 rounded-2xl bg-kelor-600 hover:bg-kelor-700 text-white font-bold text-sm shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>+ Tambah ke Keranjang</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="tentang" class="py-16 md:py-20 bg-stone-100 border-y border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <div class="space-y-6">
+                    <span class="px-3 py-1 rounded-lg bg-kelor-200 text-kelor-800 text-xs font-bold uppercase tracking-wider">
+                        Keunggulan Produk
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-stone-900">
+                        Mengapa Harus Cireng Kelor Morinutrient?
+                    </h2>
+                    <p class="text-stone-600 leading-relaxed text-sm sm:text-base">
+                        Kami memadukan resep tradisional cireng khas Nusantara dengan ekstrak superfood daun kelor segar. Menghasilkan cemilan renyah di luar, lembut di dalam, dan kaya akan nutrisi penting untuk tubuh.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div class="p-4 rounded-2xl bg-white shadow-xs border border-stone-200 flex items-start gap-3">
+                            <div class="p-2.5 rounded-xl bg-kelor-100 text-kelor-700">
+                                <i class="fa-solid fa-shield-virus text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-stone-900 text-sm">Antioksidan Tinggi</h4>
+                                <p class="text-xs text-stone-500 mt-1">Mengandung flavonoid alami dari daun kelor segar.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-white shadow-xs border border-stone-200 flex items-start gap-3">
+                            <div class="p-2.5 rounded-xl bg-kuning-500/20 text-kuning-500">
+                                <i class="fa-solid fa-wallet text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-stone-900 text-sm">Ramah Kantong</h4>
+                                <p class="text-xs text-stone-500 mt-1">Hanya Rp5.000 per porsi isi 4 buah cireng.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Box Banner -->
+                <div class="bg-gradient-to-br from-kelor-800 to-kelor-900 rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl">
+                    <div class="absolute -right-10 -bottom-10 opacity-10 text-white">
+                        <i class="fa-solid fa-leaf text-[200px]"></i>
+                    </div>
+
+                    <h3 class="text-2xl font-bold font-heading mb-4">Manfaat Sehat Daun Kelor</h3>
+                    <p class="text-kelor-100 text-sm mb-6 leading-relaxed">
+                        Daun Kelor (<span class="italic">Moringa Oleifera</span>) kaya akan Vitamin A, Vitamin C, Kalsium, dan Protein Alami. Menjadikan cemilan santai Anda lebih bermanfaat!
+                    </p>
+
+                    <div class="flex items-center gap-4 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10">
+                        <i class="fa-solid fa-award text-3xl text-kuning-400"></i>
+                        <div>
+                            <p class="font-bold text-white text-sm">Higienis & Bebas Pengawet</p>
+                            <p class="text-xs text-kelor-200">Diolah secara bersih dan selalu disajikan fresh.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="cara-pesan" class="py-16 md:py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="text-3xl font-extrabold font-heading text-stone-900">3 Langkah Mudah Pemesanan</h2>
+                <p class="text-stone-500 text-sm mt-2">Pesan cireng favoritmu tanpa ribet via WhatsApp</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-stone-50 p-6 rounded-3xl border border-stone-200 text-center">
+                    <div class="w-12 h-12 mx-auto mb-4 rounded-2xl bg-kelor-600 text-white font-extrabold text-lg flex items-center justify-center shadow-md">
+                        1
+                    </div>
+                    <h3 class="font-bold text-stone-900 text-base mb-1">Pilih Produk</h3>
+                    <p class="text-stone-500 text-xs leading-relaxed">Pilih Cireng Ayam Suwir atau Coklat dan masukkan ke keranjang belanja.</p>
+                </div>
+
+                <div class="bg-stone-50 p-6 rounded-3xl border border-stone-200 text-center">
+                    <div class="w-12 h-12 mx-auto mb-4 rounded-2xl bg-kelor-600 text-white font-extrabold text-lg flex items-center justify-center shadow-md">
+                        2
+                    </div>
+                    <h3 class="font-bold text-stone-900 text-base mb-1">Isi Form Checkout</h3>
+                    <p class="text-stone-500 text-xs leading-relaxed">Isi nama, nomor WA, serta pilih metode COD atau Ambil di Tempat.</p>
+                </div>
+
+                <div class="bg-stone-50 p-6 rounded-3xl border border-stone-200 text-center">
+                    <div class="w-12 h-12 mx-auto mb-4 rounded-2xl bg-kelor-600 text-white font-extrabold text-lg flex items-center justify-center shadow-md">
+                        3
+                    </div>
+                    <h3 class="font-bold text-stone-900 text-base mb-1">Kirim via WhatsApp</h3>
+                    <p class="text-stone-500 text-xs leading-relaxed">Klik konfirmasi dan kirim pesanan otomatis yang telah terformat ke WA kami.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-stone-900 text-stone-300 py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-kelor-600 flex items-center justify-center text-white">
+                            <i class="fa-solid fa-leaf text-lg"></i>
+                        </div>
+                        <span class="text-lg font-bold font-heading text-white">Cireng Kelor Morinutrient</span>
+                    </div>
+                    <p class="text-stone-400 text-xs leading-relaxed">
+                        Camilan cireng inovasi daun kelor lezat, sehat, dan ramah kantong.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-3 font-heading">Hubungi Kami</h4>
+                    <p class="text-xs text-stone-400 flex items-center gap-2 mb-2">
+                        <i class="fa-brands fa-whatsapp text-emerald-400 text-base"></i>
+                        <span>WhatsApp: 0895403613698</span>
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-3 font-heading">Jam Layanan</h4>
+                    <p class="text-xs text-stone-400">
+                        Setiap Hari: 08:00 - 20:00 WIB
+                    </p>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-stone-800 text-center text-xs text-stone-500">
+                &copy; <span id="year"></span> Cireng Kelor Morinutrient. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <div id="cart-drawer-overlay" onclick="closeCartDrawer()" class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs z-50 hidden opacity-0 transition-opacity duration-300"></div>
+    
+    <div id="cart-drawer" class="fixed top-0 right-0 bottom-0 w-full max-w-md bg-white z-50 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out">
+        <!-- Header Cart -->
+        <div class="p-5 border-b border-stone-200 flex items-center justify-between bg-stone-50">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-basket-shopping text-kelor-600 text-xl"></i>
+                <h3 class="font-bold font-heading text-lg text-stone-900">Keranjang Belanja</h3>
+            </div>
+            <button onclick="closeCartDrawer()" class="p-2 rounded-xl text-stone-400 hover:text-stone-700 hover:bg-stone-200 transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Items List -->
+        <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-4">
+            <!-- Dynamic Cart Items via JavaScript -->
+        </div>
+
+        <!-- Cart Footer -->
+        <div class="p-5 border-t border-stone-200 bg-stone-50 space-y-4">
+            <div class="space-y-1.5">
+                <div class="flex justify-between text-xs text-stone-500">
+                    <span>Total Item</span>
+                    <span id="cart-total-items-text" class="font-bold text-stone-800">0 Porsi</span>
+                </div>
+                <div class="flex justify-between text-lg font-bold text-stone-900 font-heading pt-1 border-t border-stone-200">
+                    <span>Total Harga</span>
+                    <span id="cart-grand-total" class="text-kelor-700">Rp 0</span>
+                </div>
+            </div>
+
+            <button id="checkout-btn" onclick="openCheckoutModal()" class="w-full py-4 bg-pedas-600 hover:bg-pedas-700 text-white font-bold rounded-2xl shadow-lg shadow-pedas-600/30 flex items-center justify-center gap-2 transition-all">
+                <span>Lanjut Checkout</span>
+                <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="checkout-modal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden my-8 max-h-[90vh] flex flex-col">
+            
+            <!-- Modal Header -->
+            <div class="p-5 bg-kelor-700 text-white flex items-center justify-between">
+                <div>
+                    <h3 class="font-bold font-heading text-lg">Checkout & Pemesanan</h3>
+                    <p class="text-xs text-kelor-100">Lengkapi data untuk pengiriman WhatsApp</p>
+                </div>
+                <button onclick="closeCheckoutModal()" class="p-2 text-kelor-200 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal Form Body -->
+            <div class="p-6 overflow-y-auto space-y-5 flex-1">
+                
+                <!-- Error Alert Box -->
+                <div id="form-error-alert" class="hidden p-3.5 rounded-2xl bg-pedas-50 border border-pedas-200 text-pedas-700 text-xs font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation text-base"></i>
+                    <span id="form-error-msg">Mohon lengkapi semua data wajib!</span>
+                </div>
+
+                <!-- Input Nama -->
+                <div>
+                    <label class="block text-xs font-bold uppercase text-stone-700 mb-1.5">Nama Pemesan <span class="text-pedas-500">*</span></label>
+                    <input type="text" id="cust-name" placeholder="Contoh: Budi Santoso" class="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-kelor-500 outline-none text-sm">
+                </div>
+
+                <!-- Input WhatsApp -->
+                <div>
+                    <label class="block text-xs font-bold uppercase text-stone-700 mb-1.5">Nomor WhatsApp <span class="text-pedas-500">*</span></label>
+                    <input type="tel" id="cust-wa" placeholder="Contoh: 081234567890" class="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-kelor-500 outline-none text-sm">
+                </div>
+
+                <!-- Pickup Option Selection -->
+                <div>
+                    <label class="block text-xs font-bold uppercase text-stone-700 mb-2">Metode Pengambilan <span class="text-pedas-500">*</span></label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="cursor-pointer border border-stone-200 rounded-2xl p-3.5 flex items-center gap-2 hover:bg-stone-50 has-[:checked]:border-kelor-600 has-[:checked]:bg-kelor-50 transition-all">
+                            <input type="radio" name="pickup_method" value="Ambil di Tempat" checked onchange="togglePickupFields()" class="accent-kelor-600">
+                            <div class="text-xs">
+                                <span class="font-bold block text-stone-800">Ambil di Tempat</span>
+                                <span class="text-stone-400">Di Stand UMKM</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer border border-stone-200 rounded-2xl p-3.5 flex items-center gap-2 hover:bg-stone-50 has-[:checked]:border-kelor-600 has-[:checked]:bg-kelor-50 transition-all">
+                            <input type="radio" name="pickup_method" value="COD" onchange="togglePickupFields()" class="accent-kelor-600">
+                            <div class="text-xs">
+                                <span class="font-bold block text-stone-800">COD / Antar</span>
+                                <span class="text-stone-400">Bayar di Tempat</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Ambil di Tempat Info -->
+                <div id="pickup-info-box" class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs space-y-1">
+                    <p class="font-bold flex items-center gap-1.5">
+                        <i class="fa-solid fa-store"></i> Lokasi Pengambilan:
+                    </p>
+                    <p class="text-amber-800">Stand Cireng Kelor Morinutrient, Area Kampus / UMKM.</p>
+                </div>
+
+                <!-- COD Conditional Fields -->
+                <div id="cod-fields-box" class="hidden space-y-4 pt-2 border-t border-stone-100">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-stone-700 mb-1.5">Alamat Lengkap <span class="text-pedas-500">*</span></label>
+                        <textarea id="cust-address" rows="2" placeholder="Nama Jalan, Nomor Rumah, Kos / Gedung..." class="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-kelor-500 outline-none text-sm"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-stone-700 mb-1.5">Patokan Detail Alamat <span class="text-pedas-500">*</span></label>
+                        <input type="text" id="cust-notes-address" placeholder="Contoh: Depan warung, kos pagar hitam kamar no. 3" class="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-kelor-500 outline-none text-sm">
+                    </div>
+                </div>
+
+                <!-- Catatan Pesanan -->
+                <div>
+                    <label class="block text-xs font-bold uppercase text-stone-700 mb-1.5">Catatan Pesanan <span class="text-stone-400 font-normal">(Opsional)</span></label>
+                    <input type="text" id="cust-notes" placeholder="Contoh: Goreng agak garing ya..." class="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-kelor-500 outline-none text-sm">
+                </div>
+
+                <!-- Ringkasan Pesanan Card -->
+                <div class="p-4 rounded-2xl bg-stone-50 border border-stone-200 space-y-2 text-xs">
+                    <p class="font-bold text-stone-800 uppercase tracking-wide">Ringkasan Pesanan:</p>
+                    <div id="summary-items-list" class="space-y-1.5 text-stone-600">
+                        <!-- JS Dynamic Items -->
+                    </div>
+                    <div class="pt-2 border-t border-stone-200 flex justify-between font-bold text-sm text-stone-900">
+                        <span>Total Bayar:</span>
+                        <span id="summary-total-price" class="text-kelor-700">Rp 0</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-5 bg-stone-50 border-t border-stone-200">
+                <button onclick="submitWhatsAppOrder()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition-all text-base">
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                    <span>Konfirmasi & Pesan via WhatsApp</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-stone-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300">
+        <div class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <span id="toast-message" class="text-sm font-medium">Produk berhasil ditambahkan!</span>
+    </div>
+
+    <script>
+        const WA_NUMBER = "0895403613698";
+        let cart = [];
+
+        // Application Setup
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("year").textContent = new Date().getFullYear();
+            loadCartFromStorage();
+            updateCartUI();
+        });
+
+        // Toggle Mobile Navigation
+        function toggleMobileMenu() {
+            const menu = document.getElementById("mobile-menu");
+            menu.classList.toggle("hidden");
+        }
+
+        // Add Product To Cart
+        function addToCart(id, name, price, variant) {
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                cart.push({
+                    id: id,
+                    name: name,
+                    price: price,
+                    variant: variant,
+                    qty: 1
+                });
+            }
+
+            saveCartToStorage();
+            updateCartUI();
+            showToast(`"${name}" berhasil ditambahkan!`);
+
+            // Animate Badge Counter
+            const badge = document.getElementById("cart-badge");
+            badge.classList.remove("pop-badge");
+            void badge.offsetWidth; // trigger reflow
+            badge.classList.add("pop-badge");
+        }
+
+        // Modify Quantity
+        function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+
+            item.qty += delta;
+
+            if (item.qty <= 0) {
+                removeFromCart(id);
+            } else {
+                saveCartToStorage();
+                updateCartUI();
+            }
+        }
+
+        // Remove Single Item
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            saveCartToStorage();
+            updateCartUI();
+        }
+
+        // Local Storage Methods
+        function saveCartToStorage() {
+            localStorage.setItem("cireng_kelor_cart_data", JSON.stringify(cart));
+        }
+
+        function loadCartFromStorage() {
+            const stored = localStorage.getItem("cireng_kelor_cart_data");
+            if (stored) {
+                try {
+                    cart = JSON.parse(stored);
+                } catch (e) {
+                    cart = [];
+                }
+            }
+        }
+
+        // Currency Format Helper
+        function formatRupiah(number) {
+            return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                maximumFractionDigits: 0
+            }).format(number);
+        }
+
+        // Update Cart Dynamic Render
+        function updateCartUI() {
+            const itemsContainer = document.getElementById("cart-items-container");
+            const badge = document.getElementById("cart-badge");
+            const grandTotalEl = document.getElementById("cart-grand-total");
+            const totalItemsText = document.getElementById("cart-total-items-text");
+            const checkoutBtn = document.getElementById("checkout-btn");
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const grandTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            // Badge Count
+            badge.textContent = totalItems;
+            if (totalItems > 0) {
+                badge.classList.remove("scale-0");
+                badge.classList.add("scale-100");
+            } else {
+                badge.classList.remove("scale-100");
+                badge.classList.add("scale-0");
+            }
+
+            // Render List Items
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = `
+                    <div class="text-center py-12 space-y-3">
+                        <div class="w-16 h-16 mx-auto rounded-full bg-stone-100 flex items-center justify-center text-stone-400 text-2xl">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                        </div>
+                        <p class="text-stone-500 font-medium text-sm">Keranjang masih kosong</p>
+                        <a href="#produk" onclick="closeCartDrawer()" class="inline-block text-xs font-bold text-kelor-600 hover:underline">
+                            + Tambah Produk Sekarang
+                        </a>
+                    </div>
+                `;
+                checkoutBtn.disabled = true;
+                checkoutBtn.classList.add("opacity-50", "cursor-not-allowed");
+            } else {
+                checkoutBtn.disabled = false;
+                checkoutBtn.classList.remove("opacity-50", "cursor-not-allowed");
+
+                itemsContainer.innerHTML = cart.map(item => `
+                    <div class="p-4 rounded-2xl bg-stone-50 border border-stone-200 flex items-center justify-between gap-3">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-stone-900 text-sm">${item.name}</h4>
+                            <p class="text-xs text-stone-400">Isi 4 buah / porsi</p>
+                            <span class="text-sm font-black text-kelor-700 block mt-1">${formatRupiah(item.price * item.qty)}</span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <div class="flex items-center border border-stone-300 rounded-xl bg-white overflow-hidden">
+                                <button onclick="changeQty(${item.id}, -1)" class="px-2.5 py-1 text-stone-600 hover:bg-stone-100 text-xs font-bold">
+                                    <i class="fa-solid fa-minus"></i>
+                                </button>
+                                <span class="px-2 text-xs font-bold text-stone-800">${item.qty}</span>
+                                <button onclick="changeQty(${item.id}, 1)" class="px-2.5 py-1 text-stone-600 hover:bg-stone-100 text-xs font-bold">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+
+                            <button onclick="removeFromCart(${item.id})" class="p-2 text-stone-400 hover:text-pedas-500 transition-colors">
+                                <i class="fa-solid fa-trash-can text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            grandTotalEl.textContent = formatRupiah(grandTotal);
+            totalItemsText.textContent = `${totalItems} Porsi`;
+        }
+
+        // Open Cart Drawer
+        function openCartDrawer() {
+            const drawer = document.getElementById("cart-drawer");
+            const overlay = document.getElementById("cart-drawer-overlay");
+
+            overlay.classList.remove("hidden");
+            setTimeout(() => {
+                overlay.classList.remove("opacity-0");
+                drawer.classList.remove("translate-x-full");
+            }, 10);
+        }
+
+        // Close Cart Drawer
+        function closeCartDrawer() {
+            const drawer = document.getElementById("cart-drawer");
+            const overlay = document.getElementById("cart-drawer-overlay");
+
+            drawer.classList.add("translate-x-full");
+            overlay.classList.add("opacity-0");
+            setTimeout(() => {
+                overlay.classList.add("hidden");
+            }, 300);
+        }
+
+        // Open Checkout Modal
+        function openCheckoutModal() {
+            if (cart.length === 0) return;
+
+            closeCartDrawer();
+
+            // Populate Summary
+            const summaryList = document.getElementById("summary-items-list");
+            const grandTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            summaryList.innerHTML = cart.map(item => `
+                <div class="flex justify-between">
+                    <span>${item.name} (${item.qty}x)</span>
+                    <span class="font-bold text-stone-800">${formatRupiah(item.price * item.qty)}</span>
+                </div>
+            `).join('');
+
+            document.getElementById("summary-total-price").textContent = formatRupiah(grandTotal);
+
+            const modal = document.getElementById("checkout-modal");
+            modal.classList.remove("hidden");
+        }
+
+        // Close Checkout Modal
+        function closeCheckoutModal() {
+            document.getElementById("checkout-modal").classList.add("hidden");
+            hideFormError();
+        }
+
+        // Toggle Pickup Option Fields
+        function togglePickupFields() {
+            const method = document.querySelector('input[name="pickup_method"]:checked').value;
+            const pickupBox = document.getElementById("pickup-info-box");
+            const codBox = document.getElementById("cod-fields-box");
+
+            if (method === "COD") {
+                pickupBox.classList.add("hidden");
+                codBox.classList.remove("hidden");
+            } else {
+                pickupBox.classList.remove("hidden");
+                codBox.classList.add("hidden");
+            }
+        }
+
+        // Toast Helper
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            document.getElementById("toast-message").textContent = msg;
+
+            toast.classList.remove("translate-y-20", "opacity-0");
+            setTimeout(() => {
+                toast.classList.add("translate-y-20", "opacity-0");
+            }, 3000);
+        }
+
+        // Form Error Display Helpers
+        function showFormError(msg) {
+            const alertBox = document.getElementById("form-error-alert");
+            document.getElementById("form-error-msg").textContent = msg;
+            alertBox.classList.remove("hidden");
+        }
+
+        function hideFormError() {
+            document.getElementById("form-error-alert").classList.add("hidden");
+        }
+
+        // Submit Order to WhatsApp
+        function submitWhatsAppOrder() {
+            hideFormError();
+
+            const name = document.getElementById("cust-name").value.trim();
+            const wa = document.getElementById("cust-wa").value.trim();
+            const pickupMethod = document.querySelector('input[name="pickup_method"]:checked').value;
+            const notes = document.getElementById("cust-notes").value.trim();
+
+            // Validations
+            if (!name) {
+                showFormError("Nama pemesan wajib diisi!");
+                return;
+            }
+            if (!wa) {
+                showFormError("Nomor WhatsApp wajib diisi!");
+                return;
+            }
+            if (cart.length === 0) {
+                showFormError("Keranjang pesanan masih kosong!");
+                return;
+            }
+
+            let address = "";
+            let notesAddress = "";
+
+            if (pickupMethod === "COD") {
+                address = document.getElementById("cust-address").value.trim();
+                notesAddress = document.getElementById("cust-notes-address").value.trim();
+
+                if (!address || !notesAddress) {
+                    showFormError("Alamat lengkap dan patokan wajib diisi jika memilih COD!");
+                    return;
+                }
+            }
+
+            const grandTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            // Construct Message Body
+            let msg = `Halo Admin *Cireng Kelor Morinutrient*, saya mau pesan:\n\n`;
+            msg += `*Data Pemesan:*\n`;
+            msg += `👤 Nama: *${name}*\n`;
+            msg += `📱 No. WA: *${wa}*\n`;
+            msg += `🛵 Metode Pengambilan: *${pickupMethod}*\n`;
+
+            if (pickupMethod === "COD") {
+                msg += `📍 Alamat COD: ${address}\n`;
+                msg += `🏠 Patokan: ${notesAddress}\n`;
+            } else {
+                msg += `🏪 Pengambilan: Stand Cireng Kelor Morinutrient\n`;
+            }
+
+            msg += `\n*Daftar Pesanan:*\n`;
+            cart.forEach((item, idx) => {
+                msg += `${idx + 1}. ${item.name} (${item.qty} porsi) - ${formatRupiah(item.price * item.qty)}\n`;
+            });
+
+            msg += `\n💰 *Total Pembayaran:* ${formatRupiah(grandTotal)}\n`;
+
+            if (notes) {
+                msg += `📝 Catatan: ${notes}\n`;
+            }
+
+            msg += `\nTerima kasih! Ditunggu konfirmasinya kak 🙏🏼`;
+
+            // Open WhatsApp Link
+            const encoded = encodeURIComponent(msg);
+            window.open(`https://wa.me/${WA_NUMBER}?text=${encoded}`, '_blank');
+        }
+    </script>
+</body>
+</html>
